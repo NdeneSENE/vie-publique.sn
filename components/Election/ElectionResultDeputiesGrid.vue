@@ -143,8 +143,8 @@
                 {{ selectedCandidate.electoral_list.name }}
               </h2>
               <button
-                @click="closeModal"
                 class="text-gray-500 hover:text-gray-700"
+                @click="closeModal"
               >
                 <span class="text-2xl">&times;</span>
               </button>

@@ -26,8 +26,8 @@
         <div
           v-for="pv in pvs"
           :key="pv.id"
-          @click="openModal(pv)"
           class="cursor-pointer overflow-hidden rounded-lg bg-white shadow-md transition-shadow duration-300 hover:shadow-lg"
+          @click="openModal(pv)"
         >
           <!-- Thumbnail -->
           <div class="relative aspect-[4/3] bg-gray-100">
@@ -120,8 +120,8 @@
                 {{ getLocationLabel(selectedPv) }}
               </h2>
               <button
-                @click="closeModal"
                 class="text-gray-500 hover:text-gray-700"
+                @click="closeModal"
               >
                 <span class="text-2xl">&times;</span>
               </button>

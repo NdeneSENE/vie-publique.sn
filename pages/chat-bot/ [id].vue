@@ -13,11 +13,13 @@
 definePageMeta({
   layout: "chat",
 });
-const messagesListRef = ref<{ addMessage: (message: string) => void } | null>(null)
+const messagesListRef = ref<{ addMessage: (message: string) => void } | null>(
+  null,
+);
 
 const handleStaticSubmit = (message: string) => {
   if (messagesListRef.value) {
-    messagesListRef.value.addMessage(message)
+    messagesListRef.value.addMessage(message);
   }
-}
+};
 </script>

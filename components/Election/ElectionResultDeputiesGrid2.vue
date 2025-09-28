@@ -78,7 +78,6 @@
                 <button
                   v-for="group in groupOptions"
                   :key="group.value"
-                  @click="toggleGroup(group.value)"
                   class="rounded-full px-4 py-1 text-[0.8rem] transition-colors duration-200"
                   :class="{
                     'bg-gray-100 text-gray-800 hover:bg-gray-200':
@@ -91,6 +90,7 @@
                         ? getGroupColor(group.value)
                         : '',
                   }"
+                  @click="toggleGroup(group.value)"
                 >
                   {{ group.label }}
                 </button>

@@ -1,5 +1,8 @@
 <template>
-  <AppContainer title="Ai Chatbot" class="flex h-dvh min-w-0 flex-col bg-primary-50 dark:bg-neutral-900">
+  <AppContainer
+    title="Ai Chatbot"
+    class="bg-primary-50 flex h-dvh min-w-0 flex-col dark:bg-neutral-900"
+  >
     <section class="py-12 sm:py-16 lg:py-32">
       <div class="mx-auto max-w-2xl">
         <div class="mb-8 text-center">
@@ -7,7 +10,7 @@
           <p class="text-2xl">Comment puis-je aider ?</p>
         </div>
         <AiChatMessagesList ref="messagesListRef" />
-        <AiChatInputBox @submit="handleStaticSubmit" ref="inputBoxRef" />
+        <AiChatInputBox ref="inputBoxRef" @submit="handleStaticSubmit" />
         <div class="mt-8">
           <AiChatStarterMessages @on-select="handleStarterMessageSelect" />
         </div>
@@ -22,19 +25,21 @@ definePageMeta({
 });
 
 interface InputBoxExpose {
-  setMessage: (message: string) => void
+  setMessage: (message: string) => void;
 }
 
-const inputBoxRef = ref<InputBoxExpose | null>(null)
-const messagesListRef = ref<{ addMessage: (message: string) => void } | null>(null)
+const inputBoxRef = ref<InputBoxExpose | null>(null);
+const messagesListRef = ref<{ addMessage: (message: string) => void } | null>(
+  null,
+);
 
 const handleStarterMessageSelect = (message: string) => {
-  inputBoxRef.value?.setMessage(message)
-}
+  inputBoxRef.value?.setMessage(message);
+};
 
 const handleStaticSubmit = (message: string) => {
   if (messagesListRef.value) {
-    messagesListRef.value.addMessage(message)
+    messagesListRef.value.addMessage(message);
   }
-}
+};
 </script>

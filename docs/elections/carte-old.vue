@@ -234,16 +234,16 @@ onMounted(async () => {
 
     <!-- CARTE 3 -->
     <div
-      class="container mx-auto px-4 py-8"
       v-if="selectedOptions == senegalMap"
+      class="container mx-auto px-4 py-8"
     >
       <ElectionSenegalMap />
     </div>
 
     <!-- CARTE 3 -->
     <div
-      class="container mx-auto px-4 py-8"
       v-if="selectedOptions == senegalMapGenerator"
+      class="container mx-auto px-4 py-8"
     >
       <h1 class="mb-6 text-3xl font-bold">SenegalMapGenerator du Sénégal</h1>
       <ElectionSenegalMapGenerator />
@@ -251,8 +251,8 @@ onMounted(async () => {
 
     <!-- CARTE 4 -->
     <div
-      class="container mx-auto px-4 py-8"
       v-if="selectedOptions == electionMapElectoral"
+      class="container mx-auto px-4 py-8"
     >
       <h1 class="mb-6 text-3xl font-bold">ElectionMapElectoral</h1>
       <ElectionMapElectoral />

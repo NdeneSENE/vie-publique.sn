@@ -1,9 +1,11 @@
 <script setup lang="ts">
-const { siteName, siteUrl, defaultImage, keywords, themeColor } = useSiteMetadata();
+const { siteName, siteUrl, defaultImage, keywords, themeColor } =
+  useSiteMetadata();
 
 const route = useRoute();
 const config = useRuntimeConfig();
-const { question, loading, error, fetchAssemblyQuestionById } = useAssemblyQuestions();
+const { question, loading, error, fetchAssemblyQuestionById } =
+  useAssemblyQuestions();
 
 const questionFullName = computed(() => {
   if (!question.value) return "";
@@ -18,8 +20,11 @@ const title = computed(() => {
 const description = computed(() => {
   if (!question.value) return "";
   // Extraire du texte brut du contenu HTML
-  const plainText = question.value.question_text?.replace(/<[^>]*>/g, '') || question.value.subject;
-  const excerpt = plainText.length > 160 ? plainText.substring(0, 157) + '...' : plainText;
+  const plainText =
+    question.value.question_text?.replace(/<[^>]*>/g, "") ||
+    question.value.subject;
+  const excerpt =
+    plainText.length > 160 ? plainText.substring(0, 157) + "..." : plainText;
   return `Question écrite posée par ${questionFullName.value} le ${formatDate(question.value.question_date)}. ${excerpt}`;
 });
 
@@ -30,46 +35,50 @@ const url = computed(() => {
 
 const image = computed(() => {
   if (!question.value) return defaultImage;
-  return question.value.deputy.photo 
+  return question.value.deputy.photo
     ? `${config.public.cmsApiUrl}/assets/${question.value.deputy.photo}`
     : defaultImage;
 });
 
 const questionSchema = computed(() => {
   if (!question.value) return null;
-  
+
   return {
     "@context": "https://schema.org",
     "@type": "Question",
-    "name": question.value.subject,
-    "text": question.value.question_text?.replace(/<[^>]*>/g, '') || question.value.subject,
-    "dateCreated": formatDateISO(question.value.question_date),
-    "url": url.value,
-    "author": {
+    name: question.value.subject,
+    text:
+      question.value.question_text?.replace(/<[^>]*>/g, "") ||
+      question.value.subject,
+    dateCreated: formatDateISO(question.value.question_date),
+    url: url.value,
+    author: {
       "@type": "Person",
-      "name": questionFullName.value,
-      "givenName": question.value.deputy.first_name,
-      "familyName": question.value.deputy.last_name,
-      "jobTitle": "Député",
-      "image": question.value.deputy.photo ? `${config.public.cmsApiUrl}/assets/${question.value.deputy.photo}` : undefined,
-      "worksFor": {
+      name: questionFullName.value,
+      givenName: question.value.deputy.first_name,
+      familyName: question.value.deputy.last_name,
+      jobTitle: "Député",
+      image: question.value.deputy.photo
+        ? `${config.public.cmsApiUrl}/assets/${question.value.deputy.photo}`
+        : undefined,
+      worksFor: {
         "@type": "GovernmentOrganization",
-        "name": "Assemblée nationale du Sénégal",
-        "url": `${siteUrl}/assemblee-nationale`,
+        name: "Assemblée nationale du Sénégal",
+        url: `${siteUrl}/assemblee-nationale`,
       },
     },
-    "about": {
+    about: {
       "@type": "GovernmentOrganization",
-      "name": "Gouvernement du Sénégal",
+      name: "Gouvernement du Sénégal",
     },
-    "isPartOf": {
+    isPartOf: {
       "@type": "CollectionPage",
-      "name": "Questions écrites parlementaires",
-      "url": `${siteUrl}/assemblee-nationale/questions`,
+      name: "Questions écrites parlementaires",
+      url: `${siteUrl}/assemblee-nationale/questions`,
     },
-    "mainEntity": {
+    mainEntity: {
       "@type": "GovernmentOrganization",
-      "name": "Assemblée nationale du Sénégal",
+      name: "Assemblée nationale du Sénégal",
     },
   };
 });
@@ -77,54 +86,54 @@ const questionSchema = computed(() => {
 const breadcrumbSchema = computed(() => ({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  "itemListElement": [
+  itemListElement: [
     {
       "@type": "ListItem",
-      "position": 1,
-      "name": "Accueil",
-      "item": siteUrl,
+      position: 1,
+      name: "Accueil",
+      item: siteUrl,
     },
     {
       "@type": "ListItem",
-      "position": 2,
-      "name": "Assemblée nationale",
-      "item": `${siteUrl}/assemblee-nationale`,
+      position: 2,
+      name: "Assemblée nationale",
+      item: `${siteUrl}/assemblee-nationale`,
     },
     {
       "@type": "ListItem",
-      "position": 3,
-      "name": "Questions écrites",
-      "item": `${siteUrl}/assemblee-nationale/questions`,
+      position: 3,
+      name: "Questions écrites",
+      item: `${siteUrl}/assemblee-nationale/questions`,
     },
     {
       "@type": "ListItem",
-      "position": 4,
-      "name": question.value?.subject || "Question",
-      "item": url.value,
+      position: 4,
+      name: question.value?.subject || "Question",
+      item: url.value,
     },
   ],
 }));
 
 const webPageSchema = computed(() => {
   if (!question.value) return null;
-  
+
   return {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": title.value,
-    "description": description.value,
-    "url": url.value,
-    "image": image.value,
-    "isPartOf": {
+    name: title.value,
+    description: description.value,
+    url: url.value,
+    image: image.value,
+    isPartOf: {
       "@type": "WebSite",
-      "name": siteName,
-      "url": siteUrl,
+      name: siteName,
+      url: siteUrl,
     },
-    "about": {
+    about: {
       "@type": "GovernmentOrganization",
-      "name": "Assemblée nationale du Sénégal",
+      name: "Assemblée nationale du Sénégal",
     },
-    "mainEntity": questionSchema.value,
+    mainEntity: questionSchema.value,
   };
 });
 
@@ -170,7 +179,9 @@ watchEffect(() => {
         "Assemblée nationale Sénégal",
         "contrôle parlementaire",
         question.value.subject,
-      ].filter(Boolean).join(", "),
+      ]
+        .filter(Boolean)
+        .join(", "),
     });
 
     // Head Configuration
@@ -182,7 +193,10 @@ watchEffect(() => {
         { name: "author", content: questionFullName.value },
         { property: "og:type", content: "article" },
         { property: "og:site_name", content: siteName },
-        { property: "article:published_time", content: formatDateISO(question.value.question_date) },
+        {
+          property: "article:published_time",
+          content: formatDateISO(question.value.question_date),
+        },
         { property: "article:author", content: questionFullName.value },
         { property: "article:section", content: "Questions parlementaires" },
         { name: "robots", content: "index, follow" },
@@ -192,18 +206,22 @@ watchEffect(() => {
         { name: "ICBM", content: "14.7645042, -17.3660286" },
       ],
       script: [
-        questionSchema.value ? {
-          type: "application/ld+json",
-          children: JSON.stringify(questionSchema.value),
-        } : null,
+        questionSchema.value
+          ? {
+              type: "application/ld+json",
+              children: JSON.stringify(questionSchema.value),
+            }
+          : null,
         {
           type: "application/ld+json",
           children: JSON.stringify(breadcrumbSchema.value),
         },
-        webPageSchema.value ? {
-          type: "application/ld+json",
-          children: JSON.stringify(webPageSchema.value),
-        } : null,
+        webPageSchema.value
+          ? {
+              type: "application/ld+json",
+              children: JSON.stringify(webPageSchema.value),
+            }
+          : null,
       ].filter(Boolean),
     });
   }
@@ -217,7 +235,11 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="container mx-auto min-h-screen bg-white py-2 dark:bg-gray-900" itemscope itemtype="https://schema.org/WebPage">
+  <div
+    class="container mx-auto min-h-screen bg-white py-2 dark:bg-gray-900"
+    itemscope
+    itemtype="https://schema.org/WebPage"
+  >
     <div class="mx-auto max-w-4xl">
       <!-- Bouton retour -->
       <NuxtLink
@@ -244,25 +266,55 @@ onMounted(async () => {
       <!-- Contenu de la question -->
       <div v-else-if="question" class="space-y-6">
         <!-- Schema.org hidden metadata -->
-        <div itemscope itemtype="https://schema.org/Question" itemprop="mainEntity">
-          <meta itemprop="url" :content="url">
-          <meta itemprop="dateCreated" :content="formatDateISO(question.question_date)">
-          <meta itemprop="name" :content="question.subject">
-          
+        <div
+          itemscope
+          itemtype="https://schema.org/Question"
+          itemprop="mainEntity"
+        >
+          <meta itemprop="url" :content="url" />
+          <meta
+            itemprop="dateCreated"
+            :content="formatDateISO(question.question_date)"
+          />
+          <meta itemprop="name" :content="question.subject" />
+
           <!-- En-tête avec info député -->
           <div
             class="rounded-lg bg-white p-2 shadow-sm dark:bg-gray-800 dark:text-gray-100"
           >
-            <div itemprop="author" itemscope itemtype="https://schema.org/Person">
-              <meta itemprop="name" :content="questionFullName">
-              <meta itemprop="givenName" :content="question.deputy.first_name">
-              <meta itemprop="familyName" :content="question.deputy.last_name">
-              <meta itemprop="jobTitle" content="Député">
-              <meta itemprop="image" :content="getImageUrl(question.deputy.photo)">
-              
-              <div itemprop="worksFor" itemscope itemtype="https://schema.org/GovernmentOrganization">
-                <meta itemprop="name" content="Assemblée nationale du Sénégal">
-                <meta itemprop="url" :content="`${siteUrl}/assemblee-nationale`">
+            <div
+              itemprop="author"
+              itemscope
+              itemtype="https://schema.org/Person"
+            >
+              <meta itemprop="name" :content="questionFullName" />
+              <meta
+                itemprop="givenName"
+                :content="question.deputy.first_name"
+              />
+              <meta
+                itemprop="familyName"
+                :content="question.deputy.last_name"
+              />
+              <meta itemprop="jobTitle" content="Député" />
+              <meta
+                itemprop="image"
+                :content="getImageUrl(question.deputy.photo)"
+              />
+
+              <div
+                itemprop="worksFor"
+                itemscope
+                itemtype="https://schema.org/GovernmentOrganization"
+              >
+                <meta
+                  itemprop="name"
+                  content="Assemblée nationale du Sénégal"
+                />
+                <meta
+                  itemprop="url"
+                  :content="`${siteUrl}/assemblee-nationale`"
+                />
               </div>
 
               <NuxtLink
@@ -279,11 +331,18 @@ onMounted(async () => {
                   />
                   <div>
                     <h2 class="text-xl font-bold dark:text-gray-100">
-                      <span itemprop="givenName">{{ question.deputy.first_name }}</span>
-                      <span itemprop="familyName">{{ question.deputy.last_name }}</span>
+                      <span itemprop="givenName">{{
+                        question.deputy.first_name
+                      }}</span>
+                      <span itemprop="familyName">{{
+                        question.deputy.last_name
+                      }}</span>
                     </h2>
                     <div class="text-sm text-gray-500 dark:text-gray-400">
-                      <time :datetime="formatDateISO(question.question_date)" itemprop="dateCreated">
+                      <time
+                        :datetime="formatDateISO(question.question_date)"
+                        itemprop="dateCreated"
+                      >
                         {{ formatDate(question.question_date) }}
                       </time>
                     </div>
@@ -291,8 +350,11 @@ onMounted(async () => {
                 </div>
               </NuxtLink>
             </div>
-            
-            <h1 class="mb-4 text-2xl font-bold dark:text-gray-100" itemprop="name">
+
+            <h1
+              class="mb-4 text-2xl font-bold dark:text-gray-100"
+              itemprop="name"
+            >
               {{ question.subject }}
             </h1>
 
@@ -311,14 +373,25 @@ onMounted(async () => {
           </div>
 
           <!-- About information -->
-          <div itemprop="about" itemscope itemtype="https://schema.org/GovernmentOrganization">
-            <meta itemprop="name" content="Gouvernement du Sénégal">
+          <div
+            itemprop="about"
+            itemscope
+            itemtype="https://schema.org/GovernmentOrganization"
+          >
+            <meta itemprop="name" content="Gouvernement du Sénégal" />
           </div>
 
           <!-- Part of collection -->
-          <div itemprop="isPartOf" itemscope itemtype="https://schema.org/CollectionPage">
-            <meta itemprop="name" content="Questions écrites parlementaires">
-            <meta itemprop="url" :content="`${siteUrl}/assemblee-nationale/questions`">
+          <div
+            itemprop="isPartOf"
+            itemscope
+            itemtype="https://schema.org/CollectionPage"
+          >
+            <meta itemprop="name" content="Questions écrites parlementaires" />
+            <meta
+              itemprop="url"
+              :content="`${siteUrl}/assemblee-nationale/questions`"
+            />
           </div>
         </div>
 
@@ -338,9 +411,15 @@ onMounted(async () => {
               itemscope
               itemtype="https://schema.org/MediaObject"
             >
-              <meta itemprop="contentUrl" :content="getImageUrl(attachment.directus_files_id.id)">
-              <meta itemprop="encodingFormat" :content="attachment.directus_files_id.type">
-              
+              <meta
+                itemprop="contentUrl"
+                :content="getImageUrl(attachment.directus_files_id.id)"
+              />
+              <meta
+                itemprop="encodingFormat"
+                :content="attachment.directus_files_id.type"
+              />
+
               <!-- Image attachments -->
               <img
                 v-if="isImageFile(attachment.directus_files_id.type)"

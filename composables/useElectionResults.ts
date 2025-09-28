@@ -49,7 +49,7 @@ export const useElectionResults = () => {
   };
 
   // Initial fetch
-  if (process.client) {
+  if (import.meta.client) {
     onMounted(() => {
       fetchResults();
     });

@@ -179,7 +179,7 @@
               <h2 class="text-normal mb-2 font-semibold">
                 Le groupe en quelques mots
               </h2>
-              <p class="text-sm text-gray-700" v-if="groupById?.description">
+              <p v-if="groupById?.description" class="text-sm text-gray-700">
                 {{ groupById?.description }}
               </p>
               <p
@@ -209,11 +209,11 @@
 </template>
 
 <script setup lang="ts">
+import { useDeputev2 } from "@/composables/parliament/useDeputev2";
+
 const route = useRoute();
 const { fetchAssemblyGroupById, groupById, loading, error } =
   useAssemblyGroups();
-
-import { useDeputev2 } from "@/composables/parliament/useDeputev2";
 
 const { deputies, fetchElectedDeputies } = useDeputev2();
 

@@ -1,5 +1,5 @@
 // composables/useLegislature.ts
-import legislatureLocal from '@/assets/data/parliament/legislature.json';
+import legislatureLocal from "@/assets/data/parliament/legislature.json";
 
 export const useLegislature = () => {
   const legislature = ref([]);
@@ -11,7 +11,7 @@ export const useLegislature = () => {
     error.value = null;
 
     try {
-      if (process.env.NODE_ENV !== 'production') {
+      if (process.env.NODE_ENV !== "production") {
         legislature.value = legislatureLocal;
         return;
       }

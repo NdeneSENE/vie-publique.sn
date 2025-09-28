@@ -220,8 +220,8 @@ function openModal(minister: Candidate) {
               ? 'border-b border-green-700 text-green-700'
               : ''
           "
-          @click="selectFilter(option.value)"
           size="lg"
+          @click="selectFilter(option.value)"
         >
           {{ option.label }}
         </UButton>
@@ -231,8 +231,8 @@ function openModal(minister: Candidate) {
           class="custom-shadow mb-1 ml-1"
           :color="viewType === option.value ? 'white' : 'gray'"
           :class="viewType === option.value ? 'text-green-700' : ''"
-          @click="selectView(option.value)"
           size="lg"
+          @click="selectView(option.value)"
         >
           {{ option.label }}
         </UButton>

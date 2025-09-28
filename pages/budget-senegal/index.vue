@@ -4,76 +4,87 @@ import budgetData from "@/assets/data/budget/budget-2025-plf.json";
 import Budget2TableMinistry from "~/components/Budget/Budget2TableMinistry.vue";
 import Budget2TableRevenueExpense from "~/components/Budget/Budget2TableRevenueExpense.vue";
 
-const { siteName, siteUrl, defaultImage, keywords, themeColor } = useSiteMetadata();
+const { siteName, siteUrl, defaultImage, keywords, themeColor } =
+  useSiteMetadata();
 
 const title = "Budget de l'État du Sénégal 2025 | Loi de finances";
-const description = "Découvrez le budget 2025 de l'État du Sénégal. Projet de loi de finances, répartition des recettes et dépenses, budgets ministériels et institutions.";
+const description =
+  "Découvrez le budget 2025 de l'État du Sénégal. Projet de loi de finances, répartition des recettes et dépenses, budgets ministériels et institutions.";
 const url = `${siteUrl}/budget-senegal`;
 const image = `${siteUrl}/images/vpsn-share-budget.png`;
 
 const budgetSchema = {
   "@context": "https://schema.org",
   "@type": "GovernmentService",
-  "name": "Budget de l'État du Sénégal 2025",
-  "description": description,
-  "url": url,
-  "image": image,
-  "provider": {
+  name: "Budget de l'État du Sénégal 2025",
+  description: description,
+  url: url,
+  image: image,
+  provider: {
     "@type": "GovernmentOrganization",
-    "name": "Ministère des Finances et du Budget du Sénégal",
-    "parentOrganization": {
+    name: "Ministère des Finances et du Budget du Sénégal",
+    parentOrganization: {
       "@type": "GovernmentOrganization",
-      "name": "République du Sénégal",
+      name: "République du Sénégal",
     },
   },
-  "areaServed": {
+  areaServed: {
     "@type": "Country",
-    "name": "Sénégal",
+    name: "Sénégal",
   },
-  "serviceType": "Budget public",
-  "audience": {
+  serviceType: "Budget public",
+  audience: {
     "@type": "Audience",
-    "audienceType": "Citizens, Researchers, Media",
+    audienceType: "Citizens, Researchers, Media",
   },
 };
 
 const datasetSchema = {
   "@context": "https://schema.org",
   "@type": "Dataset",
-  "name": "Données budgétaires Sénégal 2025",
-  "description": "Jeu de données complet du budget de l'État sénégalais pour 2025 incluant recettes, dépenses et allocations ministérielles",
-  "url": url,
-  "keywords": ["budget", "finances publiques", "Sénégal", "2025", "ministères", "recettes", "dépenses"],
-  "creator": {
+  name: "Données budgétaires Sénégal 2025",
+  description:
+    "Jeu de données complet du budget de l'État sénégalais pour 2025 incluant recettes, dépenses et allocations ministérielles",
+  url: url,
+  keywords: [
+    "budget",
+    "finances publiques",
+    "Sénégal",
+    "2025",
+    "ministères",
+    "recettes",
+    "dépenses",
+  ],
+  creator: {
     "@type": "GovernmentOrganization",
-    "name": "Ministère des Finances et du Budget du Sénégal",
+    name: "Ministère des Finances et du Budget du Sénégal",
   },
-  "publisher": {
+  publisher: {
     "@type": "Organization",
-    "name": siteName,
+    name: siteName,
   },
-  "datePublished": "2025-01-02",
-  "dateModified": "2025-01-02",
-  "license": "https://creativecommons.org/licenses/by/4.0/",
-  "isAccessibleForFree": true,
-  "inLanguage": "fr-SN",
+  datePublished: "2025-01-02",
+  dateModified: "2025-01-02",
+  license: "https://creativecommons.org/licenses/by/4.0/",
+  isAccessibleForFree: true,
+  inLanguage: "fr-SN",
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  "itemListElement": [
+  itemListElement: [
     {
       "@type": "ListItem",
-      "position": 1,
-      "name": "Accueil",
-      "item": siteUrl,
+      position: 1,
+      name: "Accueil",
+      item: siteUrl,
     },
     {
       "@type": "ListItem",
-      "position": 2,
-      "name": "Budget Sénégal",
-      "item": url,
+      position: 2,
+      name: "Budget Sénégal",
+      item: url,
     },
   ],
 };
@@ -81,15 +92,16 @@ const breadcrumbSchema = {
 const financialProductSchema = {
   "@context": "https://schema.org",
   "@type": "FinancialProduct",
-  "name": "Loi de finances 2025 Sénégal",
-  "description": "Projet de loi de finances de l'État du Sénégal pour l'exercice 2025",
-  "url": url,
-  "provider": {
+  name: "Loi de finances 2025 Sénégal",
+  description:
+    "Projet de loi de finances de l'État du Sénégal pour l'exercice 2025",
+  url: url,
+  provider: {
     "@type": "GovernmentOrganization",
-    "name": "Assemblée nationale du Sénégal",
+    name: "Assemblée nationale du Sénégal",
   },
-  "feesAndCommissionsSpecification": "Transparent - Données publiques gratuites",
-  "category": "Public Finance",
+  feesAndCommissionsSpecification: "Transparent - Données publiques gratuites",
+  category: "Public Finance",
 };
 
 useSeoMeta({
@@ -122,7 +134,10 @@ useHead({
   link: [{ rel: "canonical", href: url }],
   meta: [
     { name: "theme-color", content: themeColor },
-    { name: "author", content: "Ministère des Finances et du Budget du Sénégal" },
+    {
+      name: "author",
+      content: "Ministère des Finances et du Budget du Sénégal",
+    },
     { property: "og:type", content: "website" },
     { property: "og:site_name", content: siteName },
     { name: "robots", content: "index, follow" },
@@ -247,12 +262,18 @@ const createPieChart = (selector, data, title) => {
 <template>
   <div class="container mx-auto py-2 md:px-8">
     <div class="mb-2 flex flex-row justify-between space-y-0 sm:items-center">
-      <NuxtLink to="/" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-800">
+      <NuxtLink
+        to="/"
+        class="inline-flex items-center text-sm text-gray-600 hover:text-gray-800"
+      >
         <UIcon name="i-heroicons-arrow-left" class="mr-2 h-5 w-5" />
         Retour
       </NuxtLink>
 
-      <NuxtLink to="/budget-senegal/2024" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-800">
+      <NuxtLink
+        to="/budget-senegal/2024"
+        class="inline-flex items-center text-sm text-gray-600 hover:text-gray-800"
+      >
         Budget 2024
         <UIcon name="i-heroicons-arrow-right" class="ml-2 h-5 w-5" />
       </NuxtLink>
@@ -269,27 +290,43 @@ const createPieChart = (selector, data, title) => {
 
     <!-- Onglets -->
     <div class="rounded-xl border-none bg-white">
-      <UTabs v-if="budget" :default-index="0" :items="[
-        { id: 'overview', label: 'Résumé' },
-        { id: 'ministries', label: 'Ministères' },
-        { id: 'institutions', label: 'Institutions' },
-      ]">
+      <UTabs
+        v-if="budget"
+        :default-index="0"
+        :items="[
+          { id: 'overview', label: 'Résumé' },
+          { id: 'ministries', label: 'Ministères' },
+          { id: 'institutions', label: 'Institutions' },
+        ]"
+      >
         <template #item="{ item }">
           <!-- Vue d'ensemble -->
           <template v-if="item.id === 'overview'">
             <!-- KPIs dans une grille responsive -->
             <div class="grid grid-cols-2 gap-2">
-              <BudgetBudget2OverviewCard v-for="indicator in budget?.keyIndicator" :key="indicator.name"
-                :name="indicator.name" :value="indicator.value" :unit="indicator.unit"
-                :variation_percentage="indicator.variation_percentage" :color="indicator.color" />
+              <BudgetBudget2OverviewCard
+                v-for="indicator in budget?.keyIndicator"
+                :key="indicator.name"
+                :name="indicator.name"
+                :value="indicator.value"
+                :unit="indicator.unit"
+                :variation_percentage="indicator.variation_percentage"
+                :color="indicator.color"
+              />
             </div>
             <!-- répartition recettes -->
-            <Budget2TableRevenueExpense :budget-data="budget?.revenueData" title="Répartition des Recettes"
-              color="green" />
+            <Budget2TableRevenueExpense
+              :budget-data="budget?.revenueData"
+              title="Répartition des Recettes"
+              color="green"
+            />
 
             <!-- répartition Dépenses -->
-            <Budget2TableRevenueExpense :budget-data="budget?.expenseData" title="Répartition des Dépenses"
-              color="indigo" />
+            <Budget2TableRevenueExpense
+              :budget-data="budget?.expenseData"
+              title="Répartition des Dépenses"
+              color="indigo"
+            />
 
             <!-- opération trésorerie -->
             <h2 class="mt-4 p-2 text-center font-bold">
@@ -302,12 +339,23 @@ const createPieChart = (selector, data, title) => {
               </p>
             </div>
             <div class="flex flex-row md:gap-4">
-              <BudgetRessourcesCircleProgress v-for="treasuryOperation in budget?.treasuryOperations
-                .components" :key="treasuryOperation.label" :percentage="treasuryOperation.percentage"
-                :label="treasuryOperation.label" :value="`${treasuryOperation.value} Mrd`" color-bg="#5924b2"
-                color-text="purple" class="flex-1" />
+              <BudgetRessourcesCircleProgress
+                v-for="treasuryOperation in budget?.treasuryOperations
+                  .components"
+                :key="treasuryOperation.label"
+                :percentage="treasuryOperation.percentage"
+                :label="treasuryOperation.label"
+                :value="`${treasuryOperation.value} Mrd`"
+                color-bg="#5924b2"
+                color-text="purple"
+                class="flex-1"
+              />
             </div>
-            <Budget2TableRevenueExpense :budget-data="budget?.treasuryOperations.components" title="" color="purple" />
+            <Budget2TableRevenueExpense
+              :budget-data="budget?.treasuryOperations.components"
+              title=""
+              color="purple"
+            />
             <!-- Dettes -->
             <h2 class="mt-4 p-2 text-center font-bold">
               Répartition de la Dette publique
@@ -320,21 +368,37 @@ const createPieChart = (selector, data, title) => {
               </p>
             </div>
             <div class="flex flex-row md:gap-4">
-              <BudgetRessourcesCircleProgress v-for="treasuryOperation in budget?.publicDebt.components"
-                :key="treasuryOperation.label" :percentage="treasuryOperation.percentage"
-                :label="treasuryOperation.label" :value="`${treasuryOperation.value} Mrd`" color-bg="#f97316"
-                color-text="yellow" class="flex-1" />
+              <BudgetRessourcesCircleProgress
+                v-for="treasuryOperation in budget?.publicDebt.components"
+                :key="treasuryOperation.label"
+                :percentage="treasuryOperation.percentage"
+                :label="treasuryOperation.label"
+                :value="`${treasuryOperation.value} Mrd`"
+                color-bg="#f97316"
+                color-text="yellow"
+                class="flex-1"
+              />
             </div>
-            <Budget2TableRevenueExpense :budget-data="budget?.publicDebt.components" title="" color="orange" />
+            <Budget2TableRevenueExpense
+              :budget-data="budget?.publicDebt.components"
+              title=""
+              color="orange"
+            />
           </template>
 
           <!-- Ministères -->
           <template v-if="item.id === 'ministries'">
-            <Budget2TableMinistry :ministries="budget.ministries" type="ministries" />
+            <Budget2TableMinistry
+              :ministries="budget.ministries"
+              type="ministries"
+            />
           </template>
           <!-- Ministères -->
           <template v-if="item.id === 'institutions'">
-            <Budget2TableMinistry :ministries="budget.institutions" type="institutions" />
+            <Budget2TableMinistry
+              :ministries="budget.institutions"
+              type="institutions"
+            />
           </template>
         </template>
       </UTabs>
@@ -342,8 +406,15 @@ const createPieChart = (selector, data, title) => {
       <!-- Sources -->
       <div class="mt-6 bg-white p-4 shadow-lg">
         <h2 class="mb-2 text-lg font-semibold">🗂️ Sources</h2>
-        <UButton icon="i-heroicons-document-text" size="sm" color="blue" variant="solid"
-          label="Voir les documents budgétaires" to="/documents/budget" :trailing="false" />
+        <UButton
+          icon="i-heroicons-document-text"
+          size="sm"
+          color="blue"
+          variant="solid"
+          label="Voir les documents budgétaires"
+          to="/documents/budget"
+          :trailing="false"
+        />
       </div>
       <div class="mt-6 border-b border-gray-200 bg-white p-4 shadow-lg">
         <h2 class="mb-2 text-lg font-semibold">💡 NB</h2>

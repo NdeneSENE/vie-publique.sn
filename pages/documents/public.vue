@@ -209,8 +209,8 @@ const handlePageChange = (page: number) => {
                 {{ (doc as any).description }}
               </p>
               <div
-                class="mt-1 flex flex-wrap gap-4 text-sm text-gray-400"
                 v-if="doc.publish_date"
+                class="mt-1 flex flex-wrap gap-4 text-sm text-gray-400"
               >
                 <span
                   class="flex items-center gap-1 rounded-full bg-gray-50 px-2 py-1 text-xs text-gray-400 dark:bg-gray-800 dark:text-gray-500"

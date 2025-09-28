@@ -31,65 +31,68 @@
 <script setup>
 import { useDeputev2 } from "@/composables/parliament/useDeputev2";
 
-const { siteName, siteUrl, defaultImage, keywords, themeColor } = useSiteMetadata();
+const { siteName, siteUrl, defaultImage, keywords, themeColor } =
+  useSiteMetadata();
 
 const title = "Députés de l'Assemblée Nationale du Sénégal | 15e législature";
-const description = "Retrouvez tous les 165 députés en activité de l'Assemblée nationale du Sénégal. Liste complète de la 15e législature avec résultats de vote et analyses.";
+const description =
+  "Retrouvez tous les 165 députés en activité de l'Assemblée nationale du Sénégal. Liste complète de la 15e législature avec résultats de vote et analyses.";
 const url = `${siteUrl}/assemblee-nationale/deputes`;
 const image = `${siteUrl}/images/vpsn-share-elections.png`;
 
 const deputiesSchema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": title,
-  "description": description,
-  "url": url,
-  "image": image,
-  "isPartOf": {
+  name: title,
+  description: description,
+  url: url,
+  image: image,
+  isPartOf: {
     "@type": "WebSite",
-    "name": siteName,
-    "url": siteUrl,
+    name: siteName,
+    url: siteUrl,
   },
-  "about": [
+  about: [
     {
       "@type": "GovernmentOrganization",
-      "name": "Assemblée nationale du Sénégal",
-      "description": "Parlement du Sénégal",
+      name: "Assemblée nationale du Sénégal",
+      description: "Parlement du Sénégal",
     },
     {
       "@type": "Thing",
-      "name": "15e législature du Sénégal",
+      name: "15e législature du Sénégal",
     },
   ],
-  "mainEntity": {
+  mainEntity: {
     "@type": "ItemList",
-    "name": "Députés de la 15e législature",
-    "description": "Liste des 165 députés élus de l'Assemblée nationale du Sénégal",
-    "numberOfItems": 165,
+    name: "Députés de la 15e législature",
+    description:
+      "Liste des 165 députés élus de l'Assemblée nationale du Sénégal",
+    numberOfItems: 165,
   },
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  "itemListElement": [
+  itemListElement: [
     {
       "@type": "ListItem",
-      "position": 1,
-      "name": "Accueil",
-      "item": siteUrl,
+      position: 1,
+      name: "Accueil",
+      item: siteUrl,
     },
     {
       "@type": "ListItem",
-      "position": 2,
-      "name": "Assemblée nationale",
-      "item": `${siteUrl}/assemblee-nationale`,
+      position: 2,
+      name: "Assemblée nationale",
+      item: `${siteUrl}/assemblee-nationale`,
     },
     {
       "@type": "ListItem",
-      "position": 3,
-      "name": "Députés",
-      "item": url,
+      position: 3,
+      name: "Députés",
+      item: url,
     },
   ],
 };
@@ -97,40 +100,41 @@ const breadcrumbSchema = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "LegislativeBuilding",
-  "name": "Assemblée nationale du Sénégal",
-  "url": `${siteUrl}/assemblee-nationale`,
-  "description": "Parlement unicaméral de la République du Sénégal",
-  "address": {
+  name: "Assemblée nationale du Sénégal",
+  url: `${siteUrl}/assemblee-nationale`,
+  description: "Parlement unicaméral de la République du Sénégal",
+  address: {
     "@type": "PostalAddress",
-    "streetAddress": "Avenue Léopold Sédar Senghor",
-    "addressLocality": "Dakar",
-    "addressCountry": "SN",
+    streetAddress: "Avenue Léopold Sédar Senghor",
+    addressLocality: "Dakar",
+    addressCountry: "SN",
   },
-  "governmentType": "Legislature",
-  "numberOfMembers": 165,
-  "politicalSystem": "Démocratie parlementaire",
-  "foundingDate": "1960",
-  "legislativeTerm": "15e législature",
+  governmentType: "Legislature",
+  numberOfMembers: 165,
+  politicalSystem: "Démocratie parlementaire",
+  foundingDate: "1960",
+  legislativeTerm: "15e législature",
 };
 
 const governmentSchema = {
   "@context": "https://schema.org",
   "@type": "GovernmentOrganization",
-  "name": "Assemblée nationale du Sénégal",
-  "url": url,
-  "description": "Institution législative de la République du Sénégal composée de 165 députés",
-  "address": {
+  name: "Assemblée nationale du Sénégal",
+  url: url,
+  description:
+    "Institution législative de la République du Sénégal composée de 165 députés",
+  address: {
     "@type": "PostalAddress",
-    "addressCountry": "SN",
-    "addressLocality": "Dakar",
+    addressCountry: "SN",
+    addressLocality: "Dakar",
   },
-  "areaServed": {
+  areaServed: {
     "@type": "Country",
-    "name": "Sénégal",
+    name: "Sénégal",
   },
-  "parentOrganization": {
+  parentOrganization: {
     "@type": "GovernmentOrganization",
-    "name": "République du Sénégal",
+    name: "République du Sénégal",
   },
 };
 

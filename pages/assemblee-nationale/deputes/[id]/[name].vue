@@ -77,7 +77,8 @@
 <script setup lang="ts">
 import { useDeputev2 } from "@/composables/parliament/useDeputev2";
 
-const { siteName, siteUrl, defaultImage, keywords, themeColor } = useSiteMetadata();
+const { siteName, siteUrl, defaultImage, keywords, themeColor } =
+  useSiteMetadata();
 
 const route = useRoute();
 const router = useRouter();
@@ -98,14 +99,18 @@ const deputyFullName = computed(() => {
 
 const title = computed(() => {
   if (!deputy.value) return "Chargement...";
-  return `${deputyFullName.value} - Député ${deputy.value.electoral_list?.name || ''} | Assemblée nationale Sénégal`;
+  return `${deputyFullName.value} - Député ${deputy.value.electoral_list?.name || ""} | Assemblée nationale Sénégal`;
 });
 
 const description = computed(() => {
   if (!deputy.value) return "";
-  const age = deputy.value.birthdate ? calculateAge(deputy.value.birthdate) : "";
+  const age = deputy.value.birthdate
+    ? calculateAge(deputy.value.birthdate)
+    : "";
   const ageText = age ? `, ${age} ans` : "";
-  const listText = deputy.value.electoral_list?.name ? ` de la liste ${deputy.value.electoral_list.name}` : "";
+  const listText = deputy.value.electoral_list?.name
+    ? ` de la liste ${deputy.value.electoral_list.name}`
+    : "";
   return `Découvrez le profil et l'activité parlementaire de ${deputyFullName.value}${ageText}, député${listText} à l'Assemblée nationale du Sénégal.`;
 });
 
@@ -125,43 +130,47 @@ const image = computed(() => {
 
 const deputySchema = computed(() => {
   if (!deputy.value) return null;
-  
+
   return {
     "@context": "https://schema.org",
     "@type": "Person",
-    "name": deputyFullName.value,
-    "givenName": deputy.value.first_name,
-    "familyName": deputy.value.last_name,
-    "jobTitle": "Député",
-    "description": description.value,
-    "image": image.value,
-    "url": url.value,
-    "birthDate": deputy.value.birthdate || undefined,
-    "gender": deputy.value.gender || undefined,
-    "address": deputy.value.residence ? {
-      "@type": "PostalAddress",
-      "addressLocality": deputy.value.residence,
-      "addressCountry": "SN",
-    } : undefined,
-    "worksFor": {
-      "@type": "GovernmentOrganization",
-      "name": "Assemblée nationale du Sénégal",
-      "url": `${siteUrl}/assemblee-nationale`,
-    },
-    "memberOf": deputy.value.electoral_list ? {
-      "@type": "PoliticalParty",
-      "name": deputy.value.electoral_list.name,
-    } : undefined,
-    "hasOccupation": {
-      "@type": "Occupation",
-      "name": "Député",
-      "occupationLocation": {
-        "@type": "Place",
-        "name": "Assemblée nationale du Sénégal",
-        "address": {
+    name: deputyFullName.value,
+    givenName: deputy.value.first_name,
+    familyName: deputy.value.last_name,
+    jobTitle: "Député",
+    description: description.value,
+    image: image.value,
+    url: url.value,
+    birthDate: deputy.value.birthdate || undefined,
+    gender: deputy.value.gender || undefined,
+    address: deputy.value.residence
+      ? {
           "@type": "PostalAddress",
-          "addressLocality": "Dakar",
-          "addressCountry": "SN",
+          addressLocality: deputy.value.residence,
+          addressCountry: "SN",
+        }
+      : undefined,
+    worksFor: {
+      "@type": "GovernmentOrganization",
+      name: "Assemblée nationale du Sénégal",
+      url: `${siteUrl}/assemblee-nationale`,
+    },
+    memberOf: deputy.value.electoral_list
+      ? {
+          "@type": "PoliticalParty",
+          name: deputy.value.electoral_list.name,
+        }
+      : undefined,
+    hasOccupation: {
+      "@type": "Occupation",
+      name: "Député",
+      occupationLocation: {
+        "@type": "Place",
+        name: "Assemblée nationale du Sénégal",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Dakar",
+          addressCountry: "SN",
         },
       },
     },
@@ -171,53 +180,53 @@ const deputySchema = computed(() => {
 const breadcrumbSchema = computed(() => ({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  "itemListElement": [
+  itemListElement: [
     {
       "@type": "ListItem",
-      "position": 1,
-      "name": "Accueil",
-      "item": siteUrl,
+      position: 1,
+      name: "Accueil",
+      item: siteUrl,
     },
     {
       "@type": "ListItem",
-      "position": 2,
-      "name": "Assemblée nationale",
-      "item": `${siteUrl}/assemblee-nationale`,
+      position: 2,
+      name: "Assemblée nationale",
+      item: `${siteUrl}/assemblee-nationale`,
     },
     {
       "@type": "ListItem",
-      "position": 3,
-      "name": "Députés",
-      "item": `${siteUrl}/assemblee-nationale/deputes`,
+      position: 3,
+      name: "Députés",
+      item: `${siteUrl}/assemblee-nationale/deputes`,
     },
     {
       "@type": "ListItem",
-      "position": 4,
-      "name": deputyFullName.value || "Député",
-      "item": url.value,
+      position: 4,
+      name: deputyFullName.value || "Député",
+      item: url.value,
     },
   ],
 }));
 
 const profilePageSchema = computed(() => {
   if (!deputy.value) return null;
-  
+
   return {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
-    "name": title.value,
-    "description": description.value,
-    "url": url.value,
-    "image": image.value,
-    "isPartOf": {
+    name: title.value,
+    description: description.value,
+    url: url.value,
+    image: image.value,
+    isPartOf: {
       "@type": "WebSite",
-      "name": siteName,
-      "url": siteUrl,
+      name: siteName,
+      url: siteUrl,
     },
-    "mainEntity": {
+    mainEntity: {
       "@type": "Person",
-      "name": deputyFullName.value,
-      "jobTitle": "Député",
+      name: deputyFullName.value,
+      jobTitle: "Député",
     },
   };
 });
@@ -252,7 +261,9 @@ watchEffect(() => {
         "parlementaire sénégalais",
         deputy.value.electoral_list?.name || "",
         deputy.value.residence || "",
-      ].filter(Boolean).join(", "),
+      ]
+        .filter(Boolean)
+        .join(", "),
     });
 
     // Head Configuration
@@ -271,18 +282,22 @@ watchEffect(() => {
         { name: "ICBM", content: "14.7645042, -17.3660286" },
       ],
       script: [
-        deputySchema.value ? {
-          type: "application/ld+json",
-          children: JSON.stringify(deputySchema.value),
-        } : null,
+        deputySchema.value
+          ? {
+              type: "application/ld+json",
+              children: JSON.stringify(deputySchema.value),
+            }
+          : null,
         {
           type: "application/ld+json",
           children: JSON.stringify(breadcrumbSchema.value),
         },
-        profilePageSchema.value ? {
-          type: "application/ld+json",
-          children: JSON.stringify(profilePageSchema.value),
-        } : null,
+        profilePageSchema.value
+          ? {
+              type: "application/ld+json",
+              children: JSON.stringify(profilePageSchema.value),
+            }
+          : null,
       ].filter(Boolean),
     });
   }

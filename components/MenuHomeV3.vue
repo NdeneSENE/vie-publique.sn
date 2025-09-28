@@ -82,7 +82,7 @@ const cardConfigs: CardConfigs = {
         class="group block"
       >
         <div
-          class="custom-shadow dark:bg-gray-800 relative flex flex-col items-center gap-2 overflow-hidden rounded-xl border p-3 text-center transition-all duration-300 sm:h-[88px] sm:flex-row sm:items-start sm:gap-4 sm:rounded-2xl sm:p-5 sm:text-left"
+          class="custom-shadow relative flex flex-col items-center gap-2 overflow-hidden rounded-xl border p-3 text-center transition-all duration-300 sm:h-[88px] sm:flex-row sm:items-start sm:gap-4 sm:rounded-2xl sm:p-5 sm:text-left dark:bg-gray-800"
           :class="[
             cardConfigs[card.title]?.bgColor || 'bg-white dark:bg-gray-800',
             cardConfigs[card.title]?.borderColor ||

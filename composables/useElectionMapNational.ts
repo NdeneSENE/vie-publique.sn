@@ -23,7 +23,7 @@ export function useElectionData() {
 
   // Fonction pour récupérer les données du cache
   const getFromCache = <T>(key: string, duration: number): T | null => {
-    if (process.server) return null;
+    if (import.meta.server) return null;
 
     const cached = sessionStorage.getItem(key);
     if (!cached) return null;
@@ -39,7 +39,7 @@ export function useElectionData() {
 
   // Fonction pour mettre en cache les données
   const setInCache = <T>(key: string, data: T) => {
-    if (process.server) return;
+    if (import.meta.server) return;
 
     sessionStorage.setItem(
       key,
@@ -105,7 +105,7 @@ export function useElectionData() {
 
   // Fonction pour rafraîchir manuellement les données
   const refreshData = async (department?: string) => {
-    if (process.server) return;
+    if (import.meta.server) return;
 
     if (department) {
       // Rafraîchir les données d'un département spécifique
@@ -123,7 +123,7 @@ export function useElectionData() {
 
   // Fonction pour vider le cache
   const clearCache = (department?: string) => {
-    if (process.server) return;
+    if (import.meta.server) return;
 
     if (department) {
       sessionStorage.removeItem(`department-${department}`);

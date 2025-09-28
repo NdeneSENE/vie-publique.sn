@@ -44,9 +44,9 @@
         <UButton
           variant="ghost"
           color="primary"
-          @click="isModalOpen = true"
           label="Voir toutes les questions"
           icon="i-heroicons-arrow-right"
+          @click="isModalOpen = true"
         />
       </div>
     </div>
@@ -63,8 +63,8 @@
               color="gray"
               variant="ghost"
               icon="i-heroicons-x-mark"
-              @click="isModalOpen = false"
               aria-label="Fermer"
+              @click="isModalOpen = false"
             />
           </div>
         </template>

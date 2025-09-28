@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { lab } from 'd3';
+import { lab } from "d3";
 
 const currentYear = new Date().getFullYear();
 const appConfig = useAppConfig();

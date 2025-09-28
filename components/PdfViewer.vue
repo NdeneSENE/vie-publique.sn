@@ -8,30 +8,30 @@
           icon="i-heroicons-minus"
           size="sm"
           variant="outline"
-          @click="zoomOut"
           :disabled="scale <= 0.5"
+          @click="zoomOut"
         />
         <span class="text-sm font-medium">{{ Math.round(scale * 100) }}%</span>
         <UButton
           icon="i-heroicons-plus"
           size="xs"
           variant="outline"
-          @click="zoomIn"
           :disabled="scale >= 3"
+          @click="zoomIn"
         />
         <UButton
           icon="i-heroicons-arrows-pointing-out"
           size="xs"
           variant="outline"
-          @click="fitToWidth"
           title="Ajuster à la largeur"
+          @click="fitToWidth"
         />
         <UButton
           icon="i-heroicons-arrows-pointing-in"
           size="xs"
           variant="outline"
-          @click="fitToPage"
           title="Ajuster à la page"
+          @click="fitToPage"
         />
       </div>
 
@@ -40,18 +40,18 @@
           icon="i-heroicons-chevron-left"
           size="xs"
           variant="outline"
-          @click="previousPage"
           :disabled="currentPage <= 1"
+          @click="previousPage"
         />
         <span class="text-sm">
           Page
           <input
-            type="number"
             v-model.number="currentPage"
-            @change="goToPage"
+            type="number"
             :min="1"
             :max="totalPages"
             class="w-4 rounded text-center"
+            @change="goToPage"
           />
           / {{ totalPages }}
         </span>
@@ -59,8 +59,8 @@
           icon="i-heroicons-chevron-right"
           size="xs"
           variant="outline"
-          @click="nextPage"
           :disabled="currentPage >= totalPages"
+          @click="nextPage"
         />
       </div>
 
@@ -119,7 +119,7 @@
     </div>
 
     <!-- Version mobile : boutons de navigation flottants -->
-    <div class="md:hidden" v-if="totalPages > 1">
+    <div v-if="totalPages > 1" class="md:hidden">
       <div
         class="fixed bottom-20 left-4 right-4 flex items-center justify-between rounded-lg bg-white p-2 shadow-lg"
       >
@@ -127,8 +127,8 @@
           icon="i-heroicons-chevron-left"
           size="sm"
           variant="ghost"
-          @click="previousPage"
           :disabled="currentPage <= 1"
+          @click="previousPage"
         />
         <span class="text-sm font-medium"
           >{{ currentPage }} / {{ totalPages }}</span
@@ -137,8 +137,8 @@
           icon="i-heroicons-chevron-right"
           size="sm"
           variant="ghost"
-          @click="nextPage"
           :disabled="currentPage >= totalPages"
+          @click="nextPage"
         />
       </div>
     </div>
@@ -197,7 +197,7 @@ const renderPage = async (num: number) => {
 
   try {
     const page: PDFPageProxy = await pdfDoc.getPage(num);
-    
+
     // Utiliser un ratio de pixels pour améliorer la netteté
     const pixelRatio = window.devicePixelRatio || 1;
     const viewport = page.getViewport({ scale: scale.value * pixelRatio });
@@ -209,7 +209,7 @@ const renderPage = async (num: number) => {
     // Définir la taille réelle du canvas
     canvas.width = viewport.width;
     canvas.height = viewport.height;
-    
+
     // Ajuster le style CSS pour l'affichage
     canvas.style.width = `${viewport.width / pixelRatio}px`;
     canvas.style.height = `${viewport.height / pixelRatio}px`;
@@ -286,7 +286,7 @@ const fitToWidth = () => {
     const viewport = page.getViewport({ scale: 1 });
     const containerWidth = pdfContainer.value!.clientWidth - 32; // 32px for padding
     let calculatedScale = containerWidth / viewport.width;
-    
+
     // Sur mobile, arrondir le scale pour éviter le flou
     const isMobile = window.innerWidth < 768;
     if (isMobile) {
@@ -295,7 +295,7 @@ const fitToWidth = () => {
       // S'assurer qu'on ne descend pas en dessous de 1 sur mobile
       calculatedScale = Math.max(1, calculatedScale);
     }
-    
+
     scale.value = calculatedScale;
     queueRenderPage(currentPage.value);
   });

@@ -1,7 +1,5 @@
-//index.vue (page actualités)
 <script setup lang="ts">
 import { useNewsStore } from "~/stores/news";
-import { useRoute } from "vue-router";
 
 const { siteName, siteUrl, defaultImage, keywords, themeColor } = useSiteMetadata();
 
@@ -10,6 +8,7 @@ const description = "Suivez toute l'actualité de la République du Sénégal. C
 const url = `${siteUrl}/actualites`;
 const image = `${siteUrl}/images/share-linkedin.png`;
 
+// Schemas SEO optimisés (gardés identiques pour le référencement)
 const newsCollectionSchema = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
@@ -53,47 +52,7 @@ const breadcrumbSchema = {
   ],
 };
 
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "NewsMediaOrganization",
-  "name": siteName,
-  "url": siteUrl,
-  "logo": defaultImage,
-  "sameAs": [
-    "https://twitter.com/viepubliquesn",
-  ],
-  "address": {
-    "@type": "PostalAddress",
-    "addressCountry": "SN",
-    "addressLocality": "Dakar",
-  },
-  "publishingPrinciples": `${siteUrl}/ethique`,
-  "correctionsPolicy": `${siteUrl}/corrections`,
-  "missionCoveragePrioritiesPolicy": `${siteUrl}/mission`,
-};
-
-const webSiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": siteName,
-  "url": siteUrl,
-  "description": "Site d'information sur la vie publique et politique du Sénégal",
-  "inLanguage": "fr-SN",
-  "isAccessibleForFree": true,
-  "publisher": {
-    "@type": "Organization",
-    "name": siteName,
-  },
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": {
-      "@type": "EntryPoint",
-      "urlTemplate": `${siteUrl}/actualites?search={search_term_string}`,
-    },
-    "query-input": "required name=search_term_string",
-  },
-};
-
+// Configuration SEO complète
 useSeoMeta({
   title,
   ogTitle: title,
@@ -141,21 +100,11 @@ useHead({
       type: "application/ld+json",
       children: JSON.stringify(breadcrumbSchema),
     },
-    {
-      type: "application/ld+json",
-      children: JSON.stringify(organizationSchema),
-    },
-    {
-      type: "application/ld+json",
-      children: JSON.stringify(webSiteSchema),
-    },
   ],
 });
 
-// Utilisation du store
+// Store et logique
 const store = useNewsStore();
-
-// Computed properties pour lier les valeurs du store
 const searchQuery = computed({
   get: () => store.searchQuery,
   set: (value) => store.setSearchQuery(value),
@@ -166,12 +115,11 @@ const selectedCategory = computed({
   set: (value) => store.setSelectedCategory(value),
 });
 
-// Chargement initial des données
+// Chargement des données
 onBeforeMount(async () => {
   await store.fetchNews();
 });
 
-// Recharger les données lors du changement de route
 const route = useRoute();
 watch(
   () => route.path,
@@ -182,7 +130,7 @@ watch(
   },
 );
 
-// Fonction pour formater l'URL des articles
+// Fonctions utilitaires
 const formatNewsUrl = (article: {
   id: string;
   title?: string;
@@ -203,7 +151,6 @@ const formatNewsUrl = (article: {
           .replace(/(^-|-$)/g, "")
       : "actualite");
 
-  // Gestion spécifique selon la catégorie
   const categorySlug = article.category?.slug;
 
   if (categorySlug === "conseil-des-ministres") {
@@ -217,17 +164,31 @@ const formatNewsUrl = (article: {
   return `/actualites/${id}/${slug}`;
 };
 
-// Ajout des couleurs pour les catégories
-const getCategoryColor = (categoryName: string) => {
-  const colorMap: Record<string, string> = {
-    Toutes: "#6B7280", // gray-500
-    "Conseil des ministres": "#1D4ED8", // blue-700
-    "Conseil interministériel": "#7E22CE", // purple-700
-    "Assemblée nationale": "#047857", // emerald-700
-    Article: "#EA580C", // orange-600
-    "Non catégorisé": "#4B5563", // gray-600
+const getCategoryConfig = (categoryName: string) => {
+  const configs = {
+    "Conseil des ministres": { 
+      color: "bg-amber-500", 
+      textColor: "text-amber-700 dark:text-amber-400",
+      bgColor: "bg-amber-50 dark:bg-amber-900/20"
+    },
+    "Assemblée nationale": { 
+      color: "bg-blue-500", 
+      textColor: "text-blue-700 dark:text-blue-400",
+      bgColor: "bg-blue-50 dark:bg-blue-900/20"
+    },
+    "Article": { 
+      color: "bg-emerald-500", 
+      textColor: "text-emerald-700 dark:text-emerald-400",
+      bgColor: "bg-emerald-50 dark:bg-emerald-900/20"
+    },
+    "Toutes": { 
+      color: "bg-gray-500", 
+      textColor: "text-gray-700 dark:text-gray-400",
+      bgColor: "bg-gray-50 dark:bg-gray-900/20"
+    }
   };
-  return colorMap[categoryName] || "#6B7280";
+  
+  return configs[categoryName as keyof typeof configs] || configs["Toutes"];
 };
 
 const formatDateISO = (date: string) => {
@@ -236,195 +197,234 @@ const formatDateISO = (date: string) => {
 </script>
 
 <template>
-  <div class="container mx-auto" itemscope itemtype="https://schema.org/CollectionPage">
-    <div class="prose prose-sm sm:prose dark:prose-invert mx-auto my-2">
-      <h1 class="text-center dark:text-white" itemprop="headline">Actualités</h1>
-    </div>
+  <div class="py-6 sm:py-8">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" itemscope itemtype="https://schema.org/CollectionPage">
+      <!-- Header épuré -->
+      <div class="text-center mb-8">
+        <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl dark:text-white" itemprop="headline">
+          Actualités
+        </h1>
+        <p class="mt-3 text-lg text-gray-600 dark:text-gray-300">
+          L'actualité officielle de la République du Sénégal
+        </p>
+      </div>
 
-    <!-- Filtres par catégorie -->
-    <div class="mb-4">
-      <!-- Barre de recherche -->
-      <UInput
-        v-model="searchQuery"
-        size="md"
-        placeholder="Rechercher..."
-        icon="i-heroicons-magnifying-glass"
-        class="input custom-shadow mb-4 w-full dark:bg-gray-800 dark:text-white"
-        clearable
-        :disabled="store.loading"
-      />
+      <!-- Barre de recherche moderne -->
+      <div class="mb-8">
+        <div class="mx-auto max-w-xl">
+          <div class="relative">
+            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+              <UIcon name="i-heroicons-magnifying-glass" class="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              v-model="searchQuery"
+              type="search"
+              placeholder="Rechercher dans les actualités..."
+              class="w-full rounded-xl border-0 bg-white py-3 pl-12 pr-4 text-gray-900 shadow-sm ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700 dark:placeholder:text-gray-500 dark:focus:ring-blue-400"
+              :disabled="store.loading"
+            />
+          </div>
+        </div>
+      </div>
 
-      <!-- Skeleton pour les filtres pendant le chargement -->
-      <div v-if="store.loading" class="flex flex-wrap gap-2">
+      <!-- Filtres par catégorie épurés -->
+      <div class="mb-8">
+        <!-- Skeleton pour les filtres -->
+        <div v-if="store.loading" class="flex justify-center">
+          <div class="flex flex-wrap justify-center gap-2">
+            <div
+              v-for="n in 4"
+              :key="n"
+              class="h-8 w-24 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"
+            />
+          </div>
+        </div>
+
+        <!-- Filtres de catégories -->
+        <div v-else class="flex justify-center">
+          <div class="flex flex-wrap justify-center gap-2">
+            <button
+              v-for="category in store.categories"
+              :key="category.name"
+              @click="selectedCategory = category.name"
+              class="inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-all duration-200"
+              :class="selectedCategory === category.name
+                ? [getCategoryConfig(category.name).bgColor, getCategoryConfig(category.name).textColor, 'ring-2 ring-current ring-opacity-20']
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'"
+            >
+              <div
+                class="mr-2 h-2 w-2 rounded-full"
+                :class="getCategoryConfig(category.name).color"
+              />
+              {{ category.name }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenu principal -->
+      <div>
+        <!-- Loading state -->
         <div
-          v-for="n in 5"
-          :key="n"
-          class="h-10 w-32 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"
-        ></div>
-      </div>
-
-      <!-- Liste des catégories -->
-      <div v-else class="flex flex-wrap gap-2">
-        <button
-          v-for="category in store.categories"
-          :key="category.name"
-          @click="selectedCategory = category.name"
-          class="flex items-center gap-1 rounded-full p-2 text-sm transition-colors duration-200"
-          :class="{
-            'bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700':
-              selectedCategory !== category.name,
-            'text-white': selectedCategory === category.name,
-          }"
-          :style="{
-            backgroundColor:
-              selectedCategory === category.name
-                ? getCategoryColor(category.name)
-                : '',
-          }"
+          v-if="store.loading"
+          class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
-          <div
-            class="h-3 w-3 rounded-full"
-            :style="{
-              backgroundColor: getCategoryColor(category.name),
-              opacity: selectedCategory === category.name ? 1 : 0.3,
-            }"
-          ></div>
-          {{ category.name }}
-        </button>
-      </div>
-    </div>
-
-    <!-- Skeleton loader pendant le chargement -->
-    <div
-      v-if="store.loading"
-      class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-    >
-      <div v-for="n in 6" :key="n" class="animate-pulse">
-        <div class="relative w-full">
-          <div
-            class="aspect-[16/9] rounded-t-lg bg-gray-200 dark:bg-gray-700"
-          ></div>
-        </div>
-        <div class="mt-4 space-y-3">
-          <div class="h-6 w-24 rounded bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-4 w-32 rounded bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-4 w-full rounded bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-4 w-2/3 rounded bg-gray-200 dark:bg-gray-700"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Error state -->
-    <UAlert
-      v-else-if="store.error"
-      icon="i-heroicons-exclamation-triangle"
-      color="red"
-      title="Erreur de chargement"
-      :description="store.error"
-    />
-
-    <!-- Content -->
-    <div v-else>
-      <!-- Empty state -->
-      <div
-        v-if="
-          !store.loading &&
-          (!store.articles.length || store.paginatedNews.length === 0)
-        "
-        class="mt-8 flex flex-col items-center text-center text-gray-500 dark:text-gray-400"
-      >
-        <UIcon
-          name="i-heroicons-exclamation-circle"
-          class="mb-4 h-16 w-16 text-gray-400 dark:text-gray-500"
-        />
-        <p class="text-xl">Aucun résultat disponible</p>
-      </div>
-
-      <!-- News grid -->
-      <div v-else-if="!store.loading">
-        <div 
-          class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
-          itemscope 
-          itemtype="https://schema.org/ItemList"
-          itemprop="mainEntity"
-        >
-          <meta itemprop="numberOfItems" :content="store.paginatedNews.length">
-          
-          <article
-            v-for="(article, index) in store.paginatedNews"
-            :key="article.id"
-            itemscope
-            itemtype="https://schema.org/NewsArticle"
-            itemprop="itemListElement"
-            class="custom-shadow group relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border dark:border-gray-800 dark:bg-gray-900/50 dark:backdrop-blur-sm"
+          <div 
+            v-for="n in 9" 
+            :key="n" 
+            class="news-skeleton animate-pulse"
+            :style="{ animationDelay: `${n * 100}ms` }"
           >
-            <meta itemprop="position" :content="index + 1">
-            <meta itemprop="url" :content="`${siteUrl}${formatNewsUrl(article)}`">
-            <meta itemprop="datePublished" :content="formatDateISO(article.date_published)">
-            
-            <div itemprop="author" itemscope itemtype="https://schema.org/Organization">
-              <meta itemprop="name" :content="siteName">
-            </div>
-
-            <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
-              <meta itemprop="name" :content="siteName">
-              <meta itemprop="url" :content="siteUrl">
-            </div>
-
-            <UCard>
-              <NuxtLink :to="formatNewsUrl(article)" class="block" itemprop="url">
-                <div class="relative">
-                  <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
-                    <NuxtImg
-                      :src="
-                        article.cover_image
-                          ? $directusImageUrl(article.cover_image, '50')
-                          : '/default-image-2.gif'
-                      "
-                      :alt="article.title || 'Image actualité'"
-                      class="h-48 w-full object-cover"
-                      loading="lazy"
-                      fetchpriority="high"
-                      sizes="300px"
-                      :placeholder="[300, 300]"
-                      itemprop="contentUrl"
-                    />
-                    <meta itemprop="url" :content="article.cover_image ? $directusImageUrl(article.cover_image, '50') : '/default-image-2.gif'">
-                    <meta itemprop="width" content="300">
-                    <meta itemprop="height" content="192">
-                  </div>
-                  
-                  <div
-                    class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4"
-                  >
-                    <span
-                      class="rounded-full px-3 py-1 text-xs font-medium text-white"
-                      :style="{
-                        backgroundColor: getCategoryColor(
-                          article.category?.name || 'Non catégorisé',
-                        ),
-                      }"
-                      itemprop="articleSection"
-                    >
-                      {{ article.category?.name || "Non catégorisé" }}
-                    </span>
-                  </div>
+            <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
+              <!-- Image skeleton -->
+              <div class="aspect-[16/9] bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                <div class="skeleton-shimmer h-full w-full"></div>
+              </div>
+              
+              <!-- Content skeleton -->
+              <div class="p-4">
+                <div class="mb-3 h-5 w-20 rounded-full bg-gray-200 dark:bg-gray-600"></div>
+                <div class="space-y-2">
+                  <div class="h-5 w-full rounded bg-gray-200 dark:bg-gray-600"></div>
+                  <div class="h-5 w-3/4 rounded bg-gray-200 dark:bg-gray-600"></div>
                 </div>
-                <div class="p-2">
-                  <h2
-                    class="group-hover:text-primary line-clamp-2 font-semibold transition-colors dark:text-gray-100"
-                    itemprop="headline"
-                  >
-                    {{ article.title }}
-                  </h2>
-                  <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                    <time 
-                      :datetime="formatDateISO(article.date_published)"
-                      itemprop="datePublished"
-                    >
-                      {{ $dateformatWithDayName(article.date_published) }}
-                    </time>
+                <div class="mt-3 h-4 w-24 rounded bg-gray-200 dark:bg-gray-600"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error state -->
+        <div v-else-if="store.error" class="text-center py-12">
+          <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+            <UIcon name="i-heroicons-exclamation-triangle" class="h-8 w-8 text-red-600 dark:text-red-400" />
+          </div>
+          <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">
+            Erreur de chargement
+          </h3>
+          <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            {{ store.error }}
+          </p>
+          <button
+            @click="store.fetchNews()"
+            class="mt-4 inline-flex items-center rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+          >
+            Réessayer
+          </button>
+        </div>
+
+        <!-- Empty state -->
+        <div
+          v-else-if="!store.articles.length || store.paginatedNews.length === 0"
+          class="text-center py-12"
+        >
+          <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+            <UIcon name="i-heroicons-newspaper" class="h-8 w-8 text-gray-400" />
+          </div>
+          <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">
+            Aucune actualité trouvée
+          </h3>
+          <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Essayez de modifier vos filtres ou votre recherche
+          </p>
+        </div>
+
+        <!-- Grille des actualités -->
+        <div v-else>
+          <div 
+            class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            itemscope 
+            itemtype="https://schema.org/ItemList"
+            itemprop="mainEntity"
+          >
+            <meta itemprop="numberOfItems" :content="store.paginatedNews.length">
+            
+            <article
+              v-for="(article, index) in store.paginatedNews"
+              :key="article.id"
+              itemscope
+              itemtype="https://schema.org/NewsArticle"
+              itemprop="itemListElement"
+              class="news-card group relative"
+              :style="{ animationDelay: `${index * 100}ms` }"
+            >
+              <meta itemprop="position" :content="index + 1">
+              <meta itemprop="url" :content="`${siteUrl}${formatNewsUrl(article)}`">
+              <meta itemprop="datePublished" :content="formatDateISO(article.date_published)">
+              
+              <div itemprop="author" itemscope itemtype="https://schema.org/Organization">
+                <meta itemprop="name" :content="siteName">
+              </div>
+
+              <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+                <meta itemprop="name" :content="siteName">
+                <meta itemprop="url" :content="siteUrl">
+              </div>
+
+              <NuxtLink :to="formatNewsUrl(article)" class="block h-full" itemprop="url">
+                <div class="news-card-inner overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-200 transition-all duration-300 group-hover:shadow-lg group-hover:ring-gray-300 dark:bg-gray-800 dark:ring-gray-700 dark:group-hover:ring-gray-600">
+                  <!-- Image avec overlay -->
+                  <div class="relative aspect-[16/9] overflow-hidden">
+                    <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+                      <NuxtImg
+                        :src="
+                          article.cover_image
+                            ? $directusImageUrl(article.cover_image, '50')
+                            : '/default-image-2.gif'
+                        "
+                        :alt="article.title || 'Image actualité'"
+                        class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                        fetchpriority="high"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        :placeholder="[400, 225]"
+                        itemprop="contentUrl"
+                      />
+                      <meta itemprop="url" :content="article.cover_image ? $directusImageUrl(article.cover_image, '50') : '/default-image-2.gif'">
+                      <meta itemprop="width" content="400">
+                      <meta itemprop="height" content="225">
+                    </div>
+                    
+                    <!-- Overlay gradient -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                    
+                    <!-- Badge catégorie -->
+                    <div class="absolute left-4 top-4">
+                      <span
+                        class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium text-white shadow-lg backdrop-blur-sm bg-black/60"
+                        itemprop="articleSection"
+                      >
+                        <div
+                          class="mr-2 h-2 w-2 rounded-full"
+                          :class="getCategoryConfig(article.category?.name || 'Non catégorisé').color"
+                        />
+                        {{ article.category?.name || "Actualité" }}
+                      </span>
+                    </div>
                   </div>
+
+                  <!-- Contenu -->
+                  <div class="p-4">
+                    <h2
+                      class="line-clamp-2 text-lg font-semibold leading-tight text-gray-900 transition-colors duration-200 group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400"
+                      itemprop="headline"
+                    >
+                      {{ article.title }}
+                    </h2>
+
+                    <div class="mt-3 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                      <UIcon name="i-heroicons-calendar-days" class="mr-1.5 h-4 w-4" />
+                      <time 
+                        :datetime="formatDateISO(article.date_published)"
+                        itemprop="datePublished"
+                      >
+                        {{ $dateformatWithDayName(article.date_published) }}
+                      </time>
+                    </div>
+                  </div>
+
+                  <!-- Effet de border animé -->
+                  <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/5 transition-all duration-300 group-hover:ring-blue-500/20 dark:ring-white/10 dark:group-hover:ring-blue-400/20"></div>
                 </div>
 
                 <!-- Main entity of page -->
@@ -432,29 +432,189 @@ const formatDateISO = (date: string) => {
                   <meta itemprop="@id" :content="`${siteUrl}${formatNewsUrl(article)}`">
                 </div>
               </NuxtLink>
-            </UCard>
-          </article>
-        </div>
+            </article>
+          </div>
 
-        <!-- Pagination -->
-        <div v-if="store.totalPages > 1" class="mt-8 flex justify-center">
-          <UPagination
-            v-model="store.currentPage"
-            :total="store.totalItems"
-            :default-page="1"
-            :show-edges="true"
-            :sibling-count="2"
-            :active-button="{ color: 'yellow' }"
-            :ui="{
-              wrapper: 'flex items-center gap-1',
-              base: 'min-w-8 min-h-8 flex items-center justify-center rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed',
-              active: 'bg-gray-900 text-white dark:bg-gray-700',
-              inactive:
-                'bg-white text-gray-900 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700',
-            }"
-          />
+          <!-- Pagination moderne -->
+          <div v-if="store.totalPages > 1" class="mt-12 flex justify-center">
+            <nav class="flex items-center space-x-2">
+              <button
+                @click="store.currentPage = Math.max(1, store.currentPage - 1)"
+                :disabled="store.currentPage <= 1"
+                class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white text-gray-500 shadow-sm ring-1 ring-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-gray-700"
+              >
+                <UIcon name="i-heroicons-chevron-left" class="h-4 w-4" />
+              </button>
+
+              <div class="flex items-center space-x-1">
+                <button
+                  v-for="page in Math.min(5, store.totalPages)"
+                  :key="page"
+                  @click="store.currentPage = page"
+                  :class="page === store.currentPage
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'"
+                  class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium ring-1 ring-gray-200 dark:ring-gray-700"
+                >
+                  {{ page }}
+                </button>
+              </div>
+
+              <button
+                @click="store.currentPage = Math.min(store.totalPages, store.currentPage + 1)"
+                :disabled="store.currentPage >= store.totalPages"
+                class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white text-gray-500 shadow-sm ring-1 ring-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-gray-700"
+              >
+                <UIcon name="i-heroicons-chevron-right" class="h-4 w-4" />
+              </button>
+            </nav>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Animation d'apparition des cartes */
+@keyframes newsCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.news-card {
+  animation: newsCardFadeIn 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* Effet de lift pour les cartes */
+.news-card-inner {
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+
+.group:hover .news-card-inner {
+  transform: translateY(-4px);
+}
+
+/* Animation de shimmer pour le skeleton */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.dark .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+}
+
+/* Skeleton loading animation */
+.news-skeleton {
+  animation: newsCardFadeIn 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* États focus pour l'accessibilité */
+.news-card a:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 1rem;
+}
+
+/* Responsive améliorations */
+@media (max-width: 640px) {
+  .news-card-inner {
+    border-radius: 1rem;
+  }
+  
+  .news-card-inner .p-4 {
+    padding: 1rem;
+  }
+}
+
+/* Amélioration de l'accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  .news-card {
+    animation: none;
+    opacity: 1;
+  }
+  
+  .skeleton-shimmer {
+    animation: none;
+  }
+  
+  .group:hover .news-card-inner {
+    transform: none;
+  }
+  
+  .group:hover img {
+    transform: none;
+  }
+  
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Performance optimizations */
+.news-card-inner {
+  will-change: transform, box-shadow;
+}
+
+.group:hover .news-card-inner {
+  will-change: auto;
+}
+
+/* Print styles */
+@media print {
+  .news-card {
+    break-inside: avoid;
+  }
+  
+  .news-card-inner {
+    box-shadow: none !important;
+    transform: none !important;
+  }
+}
+
+/* Dark mode enhancements */
+.dark .news-card-inner {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Line clamp fallback */
+@supports not (-webkit-line-clamp: 2) {
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    line-height: 1.5;
+    max-height: 3em;
+  }
+}
+</style>

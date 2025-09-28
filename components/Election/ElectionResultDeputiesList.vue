@@ -25,8 +25,8 @@
         <div
           v-for="deputy in deputies"
           :key="deputy.id"
-          @click="openModal(deputy)"
           class="cursor-pointer rounded-lg bg-white p-4 shadow-md transition-shadow duration-300 hover:shadow-lg"
+          @click="openModal(deputy)"
         >
           <div class="flex flex-col items-center">
             <UAvatar

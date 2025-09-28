@@ -1,57 +1,60 @@
 <script setup lang="ts">
-const { siteName, siteUrl, defaultImage, keywords, themeColor } = useSiteMetadata();
+const { siteName, siteUrl, defaultImage, keywords, themeColor } =
+  useSiteMetadata();
 
-const title = "Commissions de l'Assemblée nationale du Sénégal | 15e législature";
-const description = "Découvrez les commissions parlementaires de l'Assemblée nationale du Sénégal. Organisation, présidents et membres des commissions de la 15e législature.";
+const title =
+  "Commissions de l'Assemblée nationale du Sénégal | 15e législature";
+const description =
+  "Découvrez les commissions parlementaires de l'Assemblée nationale du Sénégal. Organisation, présidents et membres des commissions de la 15e législature.";
 const url = `${siteUrl}/assemblee-nationale/commissions`;
 const image = `${siteUrl}/images/commissions-assemblee-senegal.webp`;
 
 const commissionsCollectionSchema = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  "name": title,
-  "description": description,
-  "url": url,
-  "image": image,
-  "isPartOf": {
+  name: title,
+  description: description,
+  url: url,
+  image: image,
+  isPartOf: {
     "@type": "WebSite",
-    "name": siteName,
-    "url": siteUrl,
+    name: siteName,
+    url: siteUrl,
   },
-  "about": {
+  about: {
     "@type": "GovernmentOrganization",
-    "name": "Assemblée nationale du Sénégal",
-    "description": "Parlement de la République du Sénégal",
-    "url": `${siteUrl}/assemblee-nationale`,
+    name: "Assemblée nationale du Sénégal",
+    description: "Parlement de la République du Sénégal",
+    url: `${siteUrl}/assemblee-nationale`,
   },
-  "mainEntity": {
+  mainEntity: {
     "@type": "ItemList",
-    "name": "Commissions parlementaires",
-    "description": "Liste des commissions de l'Assemblée nationale du Sénégal",
+    name: "Commissions parlementaires",
+    description: "Liste des commissions de l'Assemblée nationale du Sénégal",
   },
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  "itemListElement": [
+  itemListElement: [
     {
       "@type": "ListItem",
-      "position": 1,
-      "name": "Accueil",
-      "item": siteUrl,
+      position: 1,
+      name: "Accueil",
+      item: siteUrl,
     },
     {
       "@type": "ListItem",
-      "position": 2,
-      "name": "Assemblée nationale",
-      "item": `${siteUrl}/assemblee-nationale`,
+      position: 2,
+      name: "Assemblée nationale",
+      item: `${siteUrl}/assemblee-nationale`,
     },
     {
       "@type": "ListItem",
-      "position": 3,
-      "name": "Commissions",
-      "item": url,
+      position: 3,
+      name: "Commissions",
+      item: url,
     },
   ],
 };
@@ -59,39 +62,41 @@ const breadcrumbSchema = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "LegislativeBuilding",
-  "name": "Assemblée nationale du Sénégal",
-  "url": `${siteUrl}/assemblee-nationale`,
-  "description": "Institution législative avec ses commissions parlementaires spécialisées",
-  "address": {
+  name: "Assemblée nationale du Sénégal",
+  url: `${siteUrl}/assemblee-nationale`,
+  description:
+    "Institution législative avec ses commissions parlementaires spécialisées",
+  address: {
     "@type": "PostalAddress",
-    "streetAddress": "Avenue Léopold Sédar Senghor",
-    "addressLocality": "Dakar",
-    "addressCountry": "SN",
+    streetAddress: "Avenue Léopold Sédar Senghor",
+    addressLocality: "Dakar",
+    addressCountry: "SN",
   },
-  "governmentType": "Legislature",
-  "numberOfMembers": 165,
-  "legislativeTerm": "15e législature",
-  "subOrganization": {
+  governmentType: "Legislature",
+  numberOfMembers: 165,
+  legislativeTerm: "15e législature",
+  subOrganization: {
     "@type": "GovernmentOrganization",
-    "name": "Commissions parlementaires",
-    "description": "Organes spécialisés de l'Assemblée nationale",
+    name: "Commissions parlementaires",
+    description: "Organes spécialisés de l'Assemblée nationale",
   },
 };
 
 const governmentServiceSchema = {
   "@context": "https://schema.org",
   "@type": "GovernmentService",
-  "name": "Commissions parlementaires du Sénégal",
-  "description": "Services des commissions spécialisées de l'Assemblée nationale pour l'examen des projets de loi",
-  "provider": {
+  name: "Commissions parlementaires du Sénégal",
+  description:
+    "Services des commissions spécialisées de l'Assemblée nationale pour l'examen des projets de loi",
+  provider: {
     "@type": "GovernmentOrganization",
-    "name": "Assemblée nationale du Sénégal",
+    name: "Assemblée nationale du Sénégal",
   },
-  "areaServed": {
+  areaServed: {
     "@type": "Country",
-    "name": "Sénégal",
+    name: "Sénégal",
   },
-  "serviceType": "Travail législatif",
+  serviceType: "Travail législatif",
 };
 
 useSeoMeta({

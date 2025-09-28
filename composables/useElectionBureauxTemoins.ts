@@ -21,7 +21,7 @@ export const useBureauxTemoins = () => {
   });
 
   const departements = computed(() => {
-    let deps = bureaux.value
+    const deps = bureaux.value
       .filter((b) => !selectedRegion.value || b.region === selectedRegion.value)
       .map((b) => b.departement);
     return [...new Set(deps)].sort();
