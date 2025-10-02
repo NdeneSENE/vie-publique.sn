@@ -150,162 +150,410 @@ const formatDateISO = (date: string) => {
 };
 </script>
 
+<style scoped>
+/* Animation d'apparition des cartes */
+@keyframes assemblyNewsCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.assembly-news-card {
+  animation: assemblyNewsCardFadeIn 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* Effet de lift pour les cartes */
+.assembly-news-card-inner {
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+
+.group:hover .assembly-news-card-inner {
+  transform: translateY(-4px);
+}
+
+/* Animation de shimmer pour le skeleton */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.dark .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+}
+
+/* Skeleton loading animation */
+.assembly-news-skeleton {
+  animation: assemblyNewsCardFadeIn 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* Line clamp pour les titres */
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.5;
+  max-height: 3em;
+}
+
+/* États focus pour l'accessibilité */
+.assembly-news-card a:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 1rem;
+}
+
+/* Responsive améliorations */
+@media (max-width: 640px) {
+  .assembly-news-card-inner {
+    border-radius: 1rem;
+  }
+
+  .assembly-news-card-inner .p-6 {
+    padding: 1.25rem;
+  }
+}
+
+/* Amélioration de l'accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  .assembly-news-card {
+    animation: none;
+    opacity: 1;
+  }
+
+  .skeleton-shimmer {
+    animation: none;
+  }
+
+  .group:hover .assembly-news-card-inner {
+    transform: none;
+  }
+
+  .group:hover img {
+    transform: none;
+  }
+
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Performance optimizations */
+.assembly-news-card-inner {
+  will-change: transform, box-shadow;
+}
+
+.group:hover .assembly-news-card-inner {
+  will-change: auto;
+}
+
+/* Print styles */
+@media print {
+  .assembly-news-card {
+    break-inside: avoid;
+  }
+
+  .assembly-news-card-inner {
+    box-shadow: none !important;
+    transform: none !important;
+  }
+}
+
+/* Dark mode enhancements */
+.dark .assembly-news-card-inner {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Glow effect pour le badge assemblée */
+.group:hover [class*="bg-blue-600"] {
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+}
+
+/* Hover effects pour les images */
+.assembly-news-card img {
+  transition: transform 0.3s ease-out, filter 0.3s ease-out;
+}
+
+.group:hover .assembly-news-card img {
+  filter: brightness(1.05) contrast(1.05);
+}
+
+/* Effet spécial pour le badge avec pulse */
+@keyframes badgePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.group:hover [class*="bg-blue-600"] {
+  animation: badgePulse 2s ease-in-out infinite;
+}
+</style>
+
 <template>
-  <div
-    class="container mx-auto px-4 py-4"
-    itemscope
-    itemtype="https://schema.org/CollectionPage"
-  >
-    <NuxtLink
-      to="/assemblee-nationale"
-      class="mb-6 inline-flex items-center text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+  <div class="py-6 sm:py-8">
+    <div
+      class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+      itemscope
+      itemtype="https://schema.org/CollectionPage"
     >
-      <UIcon name="i-heroicons-arrow-left" class="mr-2 h-5 w-5" />
-      Retour aux actualités
-    </NuxtLink>
-
-    <div class="mx-auto max-w-7xl">
-      <h1
-        class="mb-8 text-center text-3xl font-bold text-gray-900 dark:text-white"
-        itemprop="headline"
-      >
-        Actualités Assemblée
-      </h1>
-
-      <!-- Loading state -->
-      <div
-        v-if="loading"
-        class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        <div v-for="n in 6" :key="n" class="animate-pulse">
-          <div class="relative w-full">
-            <div
-              class="aspect-[16/9] rounded-t-lg bg-gray-200 dark:bg-gray-700"
-            ></div>
-          </div>
-          <div
-            class="mt-4 h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-700"
-          ></div>
-          <div
-            class="mt-2 h-3 w-1/4 rounded bg-gray-200 dark:bg-gray-700"
-          ></div>
-        </div>
-      </div>
-
-      <!-- Error state -->
-      <div
-        v-else-if="error"
-        class="rounded-lg bg-red-50 p-4 text-center text-red-500 dark:bg-red-900/50 dark:text-red-400"
-      >
-        {{ error }}
-      </div>
-
-      <!-- Content -->
-      <div
-        v-else
-        class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        itemscope
-        itemtype="https://schema.org/ItemList"
-      >
-        <meta itemprop="numberOfItems" :content="news.length" />
-
-        <article
-          v-for="(article, index) in news"
-          :key="article.id"
-          itemscope
-          itemtype="https://schema.org/NewsArticle"
-          itemprop="itemListElement"
-          class="group flex flex-col overflow-hidden rounded-lg bg-white shadow-xl transition-all dark:border dark:border-gray-800 dark:bg-gray-900/50 dark:backdrop-blur-sm"
+      <!-- Breadcrumb moderne -->
+      <nav class="mb-8">
+        <NuxtLink
+          to="/assemblee-nationale"
+          class="group inline-flex items-center rounded-full bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-gray-200 transition-all duration-200 hover:bg-gray-50 hover:shadow-md hover:ring-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-700 dark:hover:bg-gray-700 dark:hover:ring-gray-600"
         >
-          <meta itemprop="position" :content="index + 1" />
-          <meta
-            itemprop="url"
-            :content="`${siteUrl}/assemblee-nationale/actualites/${article.id}/${article.slug}`"
+          <UIcon
+            name="i-heroicons-arrow-left"
+            class="mr-2 h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5"
           />
-          <meta
-            itemprop="datePublished"
-            :content="formatDateISO(article.date_published)"
-          />
-          <meta itemprop="publisher" content="Vie-Publique.sn" />
+          15e législature
+        </NuxtLink>
+      </nav>
 
+      <!-- Header de section moderne -->
+      <div class="text-center mb-8">
+        <h1
+          class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl dark:text-white"
+          itemprop="headline"
+        >
+          Actualités de l'Assemblée
+        </h1>
+        <p class="mt-3 text-lg text-gray-600 dark:text-gray-300 sm:mt-4">
+          Suivez l'activité parlementaire en temps réel : débats, votes, commissions et initiatives législatives
+        </p>
+      </div>
+
+      <!-- Content section -->
+      <div class="assembly-news-container">
+        <!-- Loading state moderne -->
+        <div
+          v-if="loading"
+          class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
           <div
-            itemprop="author"
-            itemscope
-            itemtype="https://schema.org/Organization"
+            v-for="n in 6"
+            :key="n"
+            class="assembly-news-skeleton animate-pulse"
+            :style="{ animationDelay: `${n * 100}ms` }"
           >
-            <meta itemprop="name" content="Assemblée nationale du Sénégal" />
-            <meta itemprop="url" :content="`${siteUrl}/assemblee-nationale`" />
-          </div>
+            <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
+              <!-- Image skeleton -->
+              <div class="aspect-[16/9] bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                <div class="skeleton-shimmer h-full w-full"></div>
+              </div>
 
-          <NuxtLink
-            :to="`/assemblee-nationale/actualites/${article.id}/${article.slug}`"
-            class="flex h-full flex-col"
-            itemprop="url"
-          >
-            <!-- Image Container avec ratio fixe -->
-            <div
-              class="relative w-full"
-              itemprop="image"
-              itemscope
-              itemtype="https://schema.org/ImageObject"
-            >
-              <div class="aspect-[16/9] overflow-hidden">
-                <img
-                  :src="$directusImageUrl(article.cover_image, '50')"
-                  :alt="article.title"
-                  class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  itemprop="contentUrl"
-                />
-                <meta
-                  itemprop="url"
-                  :content="$directusImageUrl(article.cover_image, '50')"
-                />
-                <meta itemprop="width" content="800" />
-                <meta itemprop="height" content="450" />
+              <!-- Content skeleton -->
+              <div class="p-6">
+                <div class="space-y-3">
+                  <div class="h-5 w-full rounded bg-gray-200 dark:bg-gray-600"></div>
+                  <div class="h-5 w-3/4 rounded bg-gray-200 dark:bg-gray-600"></div>
+                  <div class="h-4 w-24 rounded bg-gray-200 dark:bg-gray-600"></div>
+                </div>
+                <div class="mt-4 flex gap-2">
+                  <div class="h-6 w-16 rounded-full bg-gray-200 dark:bg-gray-600"></div>
+                  <div class="h-6 w-20 rounded-full bg-gray-200 dark:bg-gray-600"></div>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <!-- Content -->
-            <div class="flex flex-1 flex-col p-4">
-              <h2
-                class="mb-2 line-clamp-2 flex-grow font-semibold text-gray-900 group-hover:text-blue-600 dark:text-gray-100 dark:group-hover:text-blue-400"
-                itemprop="headline"
-              >
-                {{ article.title }}
-              </h2>
+        <!-- Error state moderne -->
+        <div v-else-if="error" class="text-center py-12">
+          <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+            <UIcon name="i-heroicons-exclamation-triangle" class="h-8 w-8 text-red-600 dark:text-red-400" />
+          </div>
+          <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">
+            Erreur de chargement
+          </h3>
+          <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            {{ error }}
+          </p>
+          <button
+            @click="$router.go(0)"
+            class="mt-4 inline-flex items-center rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+          >
+            Réessayer
+          </button>
+        </div>
 
-              <div
-                class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
-              >
-                <UIcon name="i-heroicons-calendar" class="h-4 w-4" />
-                <time
-                  :datetime="formatDateISO(article.date_published)"
-                  itemprop="datePublished"
-                >
-                  {{ formatDate(article.date_published) }}
-                </time>
-              </div>
+        <!-- Empty state -->
+        <div
+          v-else-if="!news.length"
+          class="text-center py-12"
+        >
+          <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+            <UIcon name="i-heroicons-newspaper" class="h-8 w-8 text-gray-400" />
+          </div>
+          <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">
+            Aucune actualité disponible
+          </h3>
+          <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Les actualités de l'Assemblée seront affichées ici
+          </p>
+        </div>
 
-              <!-- Tags -->
-              <div
-                v-if="article.tags?.length"
-                class="mt-3 flex flex-wrap gap-2"
-              >
-                <span
-                  v-for="tag in article.tags"
-                  :key="tag"
-                  class="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                  itemprop="keywords"
-                >
-                  {{ tag }}
-                </span>
-              </div>
-              <div v-else class="mt-3 text-sm text-gray-500 dark:text-gray-400">
-                <span
-                  itemprop="keywords"
-                  class="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                  >assemblée nationale</span
-                >
+        <!-- Grid des actualités -->
+        <div
+          v-else
+          class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          itemscope
+          itemtype="https://schema.org/ItemList"
+        >
+          <meta itemprop="numberOfItems" :content="news.length" />
+
+          <article
+            v-for="(article, index) in news"
+            :key="article.id"
+            class="assembly-news-card group relative"
+            :style="{ animationDelay: `${index * 100}ms` }"
+            itemscope
+            itemtype="https://schema.org/NewsArticle"
+            itemprop="itemListElement"
+          >
+            <meta itemprop="position" :content="index + 1" />
+            <meta
+              itemprop="url"
+              :content="`${siteUrl}/assemblee-nationale/actualites/${article.id}/${article.slug}`"
+            />
+            <meta
+              itemprop="datePublished"
+              :content="formatDateISO(article.date_published)"
+            />
+            <meta itemprop="publisher" content="Vie-Publique.sn" />
+
+            <div
+              itemprop="author"
+              itemscope
+              itemtype="https://schema.org/Organization"
+            >
+              <meta itemprop="name" content="Assemblée nationale du Sénégal" />
+              <meta itemprop="url" :content="`${siteUrl}/assemblee-nationale`" />
+            </div>
+
+            <NuxtLink
+              :to="`/assemblee-nationale/actualites/${article.id}/${article.slug}`"
+              class="block h-full"
+              itemprop="url"
+            >
+              <div class="assembly-news-card-inner overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-200 transition-all duration-300 group-hover:shadow-lg group-hover:ring-gray-300 dark:bg-gray-800 dark:ring-gray-700 dark:group-hover:ring-gray-600">
+                <!-- Image avec overlay -->
+                <div class="relative aspect-[16/9] overflow-hidden">
+                  <div
+                    itemprop="image"
+                    itemscope
+                    itemtype="https://schema.org/ImageObject"
+                  >
+                    <img
+                      :src="$directusImageUrl(article.cover_image, '50')"
+                      :alt="article.title"
+                      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      itemprop="contentUrl"
+                      loading="lazy"
+                    />
+                    <meta
+                      itemprop="url"
+                      :content="$directusImageUrl(article.cover_image, '50')"
+                    />
+                    <meta itemprop="width" content="400" />
+                    <meta itemprop="height" content="225" />
+                  </div>
+
+                  <!-- Overlay gradient -->
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+
+                  <!-- Badge assemblée -->
+                  <div class="absolute left-4 top-4">
+                    <span class="inline-flex items-center rounded-full bg-blue-600 px-3 py-1 text-xs font-medium text-white shadow-lg backdrop-blur-sm">
+                      <UIcon name="i-heroicons-building-library" class="mr-1.5 h-3 w-3" />
+                      Assemblée
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Contenu -->
+                <div class="p-6">
+                  <h2
+                    class="mb-3 text-lg font-semibold leading-tight text-gray-900 transition-colors duration-200 group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400 line-clamp-2"
+                    itemprop="headline"
+                  >
+                    {{ article.title }}
+                  </h2>
+
+                  <!-- Date -->
+                  <div class="mb-3 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <UIcon name="i-heroicons-calendar-days" class="mr-1.5 h-4 w-4" />
+                    <time
+                      :datetime="formatDateISO(article.date_published)"
+                      itemprop="datePublished"
+                    >
+                      {{ formatDate(article.date_published) }}
+                    </time>
+                  </div>
+
+                  <!-- Tags -->
+                  <div class="flex flex-wrap gap-2">
+                    <template v-if="article.tags?.length">
+                      <span
+                        v-for="tag in article.tags.slice(0, 2)"
+                        :key="tag"
+                        class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                        itemprop="keywords"
+                      >
+                        {{ tag }}
+                      </span>
+                      <span
+                        v-if="article.tags.length > 2"
+                        class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                      >
+                        +{{ article.tags.length - 2 }}
+                      </span>
+                    </template>
+                    <template v-else>
+                      <span
+                        class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+                        itemprop="keywords"
+                      >
+                        Assemblée nationale
+                      </span>
+                    </template>
+                  </div>
+                </div>
+
+                <!-- Effet de border animé -->
+                <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/5 transition-all duration-300 group-hover:ring-blue-500/20 dark:ring-white/10 dark:group-hover:ring-blue-400/20"></div>
               </div>
 
               <!-- Schema.org mainEntityOfPage -->
@@ -319,17 +567,9 @@ const formatDateISO = (date: string) => {
                   :content="`${siteUrl}/assemblee-nationale/actualites/${article.id}/${article.slug}`"
                 />
               </div>
-            </div>
-          </NuxtLink>
-        </article>
-      </div>
-
-      <!-- Empty state -->
-      <div
-        v-if="!loading && !error && news.length === 0"
-        class="py-12 text-center text-gray-500 dark:text-gray-400"
-      >
-        Aucun article disponible pour le moment
+            </NuxtLink>
+          </article>
+        </div>
       </div>
     </div>
   </div>

@@ -170,8 +170,8 @@ const getCardConfig = (title: string): CardConfig => {
       <div class="mt-8 sm:mt-10">
         <div class="mx-auto max-w-2xl">
           <!-- Container de recherche avec effet de focus -->
-          <div 
-            class="search-container relative transition-all duration-300"
+          <div
+            class="search-container relative z-[100] transition-all duration-300"
             :class="isSearchFocused ? 'search-focused' : ''"
           >
             <!-- Input principal -->
@@ -217,9 +217,10 @@ const getCardConfig = (title: string): CardConfig => {
             </div>
 
             <!-- Dropdown de suggestions/résultats -->
-            <div 
+            <div
               v-if="isSearchFocused || searchQuery"
-              class="search-dropdown absolute left-0 right-0 top-full z-50 mt-2 max-h-96 overflow-y-auto rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 dark:bg-gray-800 dark:ring-white/10"
+              class="search-dropdown absolute left-0 right-0 top-full z-[9999] mt-2 max-h-96 overflow-y-auto rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 dark:bg-gray-800 dark:ring-white/10"
+              style="position: absolute; z-index: 9999;"
             >
               <!-- Résultats de recherche -->
               <div v-if="searchQuery && searchResults.length > 0" class="p-2">
@@ -404,6 +405,8 @@ const getCardConfig = (title: string): CardConfig => {
 /* Styles pour la barre de recherche */
 .search-container {
   perspective: 1000px;
+  position: relative;
+  z-index: 10;
 }
 
 .search-input {
@@ -439,6 +442,8 @@ const getCardConfig = (title: string): CardConfig => {
   animation: searchDropdownFadeIn 0.2s ease-out;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  position: absolute !important;
+  z-index: 9999 !important;
 }
 
 @keyframes searchDropdownFadeIn {
